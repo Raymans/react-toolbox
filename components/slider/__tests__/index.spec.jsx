@@ -153,7 +153,7 @@ describe('Slider', function () {
       const onChangeSpy = sinon.spy();
       slider = utils.renderComponent(Slider, {onChange: onChangeSpy}, {sliderStart: 0, sliderLength: 1000});
       TestUtils.Simulate.mouseDown(slider.refs.slider, { pageX: 900 });
-      expect(onChangeSpy.called).toEqual(true);
+      expect(onChangeSpy.called).toEqual(false);
     });
   });
 });
