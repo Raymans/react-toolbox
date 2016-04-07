@@ -9,10 +9,7 @@ class Checkbox extends React.Component {
     className: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     label: React.PropTypes.any,
-    name: React.PropTypes.string,
-    onBlur: React.PropTypes.func,
-    onChange: React.PropTypes.func,
-    onFocus: React.PropTypes.func
+    onChange: React.PropTypes.func
   };
 
   static defaultProps = {
@@ -53,7 +50,7 @@ class Checkbox extends React.Component {
           type='checkbox'
         />
         <Check checked={this.props.checked} disabled={this.props.disabled}/>
-        {this.props.label ? <span data-role='label' className={style.text}>{this.props.label}</span> : null}
+        {this.props.label ? <span data-react-toolbox='label' className={style.text}>{this.props.label}</span> : null}
       </label>
     );
   }

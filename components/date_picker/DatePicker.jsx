@@ -7,8 +7,10 @@ import time from '../utils/time';
 
 class DatePicker extends React.Component {
   static propTypes = {
+    autoOk: React.PropTypes.bool,
     className: React.PropTypes.string,
     error: React.PropTypes.string,
+    inputFormat: React.PropTypes.func,
     label: React.PropTypes.string,
     maxDate: React.PropTypes.object,
     minDate: React.PropTypes.object,
@@ -36,10 +38,11 @@ class DatePicker extends React.Component {
 
   render () {
     const { value } = this.props;
-    const date = value ? `${value.getDate()} ${time.getFullMonth(value)} ${value.getFullYear()}` : null;
+    const inputFormat = this.props.inputFormat || time.formatDate;
+    const date = value ? inputFormat(value) : null;
 
     return (
-      <div data-toolbox='date-picker'>
+      <div data-react-toolbox='date-picker'>
         <Input
           className={style.input}
           error={this.props.error}
@@ -50,6 +53,7 @@ class DatePicker extends React.Component {
           value={date}
         />
         <DatePickerDialog
+          autoOk={this.props.autoOk}
           active={this.state.active}
           className={this.props.className}
           maxDate={this.props.maxDate}

@@ -8,9 +8,10 @@ class Input extends React.Component {
     children: React.PropTypes.any,
     className: React.PropTypes.string,
     disabled: React.PropTypes.bool,
-    error: React.PropTypes.string,
+    error: React.PropTypes.node,
     floating: React.PropTypes.bool,
-    icon: React.PropTypes.string,
+    hint: React.PropTypes.string,
+    icon: React.PropTypes.any,
     label: React.PropTypes.string,
     maxLength: React.PropTypes.number,
     multiline: React.PropTypes.bool,
@@ -25,6 +26,7 @@ class Input extends React.Component {
 
   static defaultProps = {
     className: '',
+    hint: '',
     disabled: false,
     floating: true,
     multiline: false,
@@ -36,20 +38,6 @@ class Input extends React.Component {
     if (this.props.onChange) this.props.onChange(event.target.value, event);
   };
 
-  renderInput () {
-    const {multiline, value, ...others} = this.props;
-    const className = ClassNames(style.input, {[style.filled]: value});
-
-    return React.createElement(multiline ? 'textarea' : 'input', {
-      ...others,
-      className,
-      onChange: this.handleChange,
-      ref: 'input',
-      role: 'input',
-      value
-    });
-  }
-
   blur () {
     this.refs.input.blur();
   }
@@ -59,8 +47,9 @@ class Input extends React.Component {
   }
 
   render () {
-    const { children, disabled, error, floating, icon,
-            label: labelText, maxLength, multiline, type, value, ...others} = this.props;
+    const { children, disabled, error, floating, hint, icon,
+            label: labelText, maxLength, multiline, required,
+            type, value, ...others} = this.props;
     const length = maxLength && value ? value.length : 0;
     const labelClassName = ClassNames(style.label, {[style.fixed]: !floating});
 
@@ -71,13 +60,16 @@ class Input extends React.Component {
       [style.withIcon]: icon
     }, this.props.className);
 
+    const valuePresent = value !== null && value !== undefined && value !== '' && !Number.isNaN(value);
+
     const InputElement = React.createElement(multiline ? 'textarea' : 'input', {
       ...others,
-      className: ClassNames(style.input, {[style.filled]: value}),
+      className: ClassNames(style.input, {[style.filled]: valuePresent}),
       onChange: this.handleChange,
       ref: 'input',
       role: 'input',
       disabled,
+      required,
       type,
       value,
       maxLength
@@ -88,7 +80,12 @@ class Input extends React.Component {
         {InputElement}
         {icon ? <FontIcon className={style.icon} value={icon} /> : null}
         <span className={style.bar}></span>
-        {labelText ? <label className={labelClassName}>{labelText}</label> : null}
+        {labelText ?
+          <label className={labelClassName}>
+            {labelText}
+            {required ? <span className={style.required}> * </span> : null}
+          </label> : null}
+        {hint ? <span className={style.hint}>{hint}</span> : null}
         {error ? <span className={style.error}>{error}</span> : null}
         {maxLength ? <span className={style.counter}>{length}/{maxLength}</span> : null}
         {children}

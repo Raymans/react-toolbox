@@ -55,6 +55,9 @@ class Slider extends React.Component {
 
   componentWillUnmount () {
     window.removeEventListener('resize', this.handleResize);
+    events.removeEventsFromDocument(this.getMouseEventMap());
+    events.removeEventsFromDocument(this.getTouchEventMap());
+    events.removeEventsFromDocument(this.getKeyboardEvents());
   }
 
   handleInputFocus = () => {
@@ -64,8 +67,8 @@ class Slider extends React.Component {
     });
   };
 
-  handleInputChange = (event) => {
-    this.setState({inputValue: event.target.value});
+  handleInputChange = (value) => {
+    this.setState({inputValue: value});
   };
 
   handleInputBlur = (event) => {
@@ -102,7 +105,7 @@ class Slider extends React.Component {
 
   handleResize = (event, callback) => {
     const {left, right} = ReactDOM.findDOMNode(this.refs.progressbar).getBoundingClientRect();
-    const cb = callback || () => {};
+    const cb = (callback) || (() => {});
     this.setState({sliderStart: left, sliderLength: right - left}, cb);
   };
 

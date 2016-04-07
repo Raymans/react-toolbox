@@ -39,6 +39,7 @@ class DropdownTest extends React.Component {
 
 | Name              | Type          | Default         | Description |
 |:-----|:-----|:-----|:-----|
+| `allowBlank`    | `Boolean`       | `true`            | If true the dropdown will preselect the first item if the supplied value matches none of the options' values
 | `auto`        | `Boolean`       |  `true`        | If true, the dropdown will open up or down depending on the position in the screen .|
 | `className`     | `String`        |  `''`               | Set the class to give custom styles to the dropdown.
 | `disabled`      | `Boolean`       | `false`         | Set the component as disabled.

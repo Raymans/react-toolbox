@@ -23,6 +23,7 @@ class DatePickerTest extends React.Component {
       <section>
         <DatePicker label='Birthdate' onChange={this.handleChange.bind(this, 'date1')} value={this.state.date1} />
         <DatePicker label='Expiration date' minDate={min_datetime} onChange={this.handleChange.bind(this, 'date2')} value={this.state.date2} />
+        <DatePicker label='Formatted date' inputFormat={(value) => `${value.getDate()}/${value.getMonth()}/${value.getFullYear()}`} onChange={this.handleChange.bind(this, 'date3')} value={this.state.date3} />
       </section>
     );
   }
@@ -33,6 +34,7 @@ class DatePickerTest extends React.Component {
 
 | Name          | Type    | Default         | Description|
 |:-----|:-----|:-----|:-----|
+| `autoOk`         | `boolean`        |  false      | Automatically selects a date upon clicking on a day|
 | `className`         | `String`        |             | This class will be placed at the top of the `DatePickerDialog` component so you can provide custom styles.|
 | `label`         | `String`        |             | The text string to use for the floating label element in the input component.|
 | `maxDate`         | `Date`    |                 | Date object with the maximum selectable date. |
@@ -40,3 +42,4 @@ class DatePickerTest extends React.Component {
 | `onChange`       | `Function`       |                | Callback called when the picker value is changed.|
 | `placeholder`     | `String`        |             | The text string to use like a input placeholder.|
 | `value`         | `Date`    |                 | Date object with the currently selected date. |
+| `inputFormat`         | `Function`    |                 | Function to format the date displayed on the input. |

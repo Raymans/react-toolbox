@@ -27,7 +27,14 @@ class Hand extends React.Component {
   };
 
   componentDidMount () {
-    this.setState({knobWidth: this.refs.knob.offsetWidth});
+    setTimeout(() => {
+      this.setState({knobWidth: this.refs.knob.offsetWidth});
+    });
+  }
+
+  componentWillUnmount () {
+    events.removeEventsFromDocument(this.getMouseEventMap());
+    events.removeEventsFromDocument(this.getTouchEventMap());
   }
 
   getMouseEventMap () {

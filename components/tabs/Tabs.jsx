@@ -7,6 +7,7 @@ class Tabs extends React.Component {
   static propTypes = {
     children: React.PropTypes.node,
     className: React.PropTypes.string,
+    disableAnimatedBottomBorder: React.PropTypes.bool,
     index: React.PropTypes.number,
     onChange: React.PropTypes.func
   };
@@ -20,13 +21,17 @@ class Tabs extends React.Component {
   };
 
   componentDidMount () {
-    setTimeout(() => {
+    !this.props.disableAnimatedBottomBorder &&
       this.updatePointer(this.props.index);
-    }, 100);
   }
 
   componentWillReceiveProps (nextProps) {
-    this.updatePointer(nextProps.index);
+    !this.props.disableAnimatedBottomBorder &&
+      this.updatePointer(nextProps.index);
+  }
+
+  componentWillUnmount () {
+    clearTimeout(this.pointerTimeout);
   }
 
   handleHeaderClick = (idx) => {
@@ -52,15 +57,18 @@ class Tabs extends React.Component {
   }
 
   updatePointer (idx) {
-    const startPoint = this.refs.tabs.getBoundingClientRect().left;
-    const label = this.refs.navigation.children[idx].getBoundingClientRect();
-    this.setState({
-      pointer: {
-        top: `${this.refs.navigation.getBoundingClientRect().height}px`,
-        left: `${label.left - startPoint}px`,
-        width: `${label.width}px`
-      }
-    });
+    clearTimeout(this.pointerTimeout);
+    this.pointerTimeout = setTimeout(() => {
+      const startPoint = this.refs.tabs.getBoundingClientRect().left;
+      const label = this.refs.navigation.children[idx].getBoundingClientRect();
+      this.setState({
+        pointer: {
+          top: `${this.refs.navigation.getBoundingClientRect().height}px`,
+          left: `${label.left - startPoint}px`,
+          width: `${label.width}px`
+        }
+      });
+    }, 20);
   }
 
   renderHeaders (headers) {
@@ -74,12 +82,14 @@ class Tabs extends React.Component {
   }
 
   renderContents (contents) {
-    return contents.map((item, idx) => {
-      return React.cloneElement(item, {
-        key: idx,
-        active: this.props.index === idx,
-        tabIndex: idx
-      });
+    const activeIdx = contents.findIndex((item, idx) => {
+      return this.props.index === idx;
+    });
+
+    return React.cloneElement(contents[activeIdx], {
+      key: activeIdx,
+      active: true,
+      tabIndex: activeIdx
     });
   }
 
@@ -89,7 +99,7 @@ class Tabs extends React.Component {
     if (this.props.className) className += ` ${this.props.className}`;
 
     return (
-      <div ref='tabs' className={className}>
+      <div ref='tabs' data-react-toolbox='tabs' className={className}>
         <nav className={style.navigation} ref='navigation'>
           {this.renderHeaders(headers)}
         </nav>

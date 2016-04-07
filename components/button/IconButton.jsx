@@ -11,9 +11,11 @@ class IconButton extends React.Component {
     className: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     href: React.PropTypes.string,
-    icon: React.PropTypes.string,
+    icon: React.PropTypes.any,
     inverse: React.PropTypes.bool,
     neutral: React.PropTypes.bool,
+    onMouseLeave: React.PropTypes.func,
+    onMouseUp: React.PropTypes.func,
     primary: React.PropTypes.bool,
     type: React.PropTypes.string
   };
@@ -25,8 +27,14 @@ class IconButton extends React.Component {
     primary: false
   };
 
-  handleMouseUp = () => {
+  handleMouseUp = (event) => {
     this.refs.button.blur();
+    if (this.props.onMouseUp) this.props.onMouseUp(event);
+  };
+
+  handleMouseLeave = (event) => {
+    this.refs.button.blur();
+    if (this.props.onMouseLeave) this.props.onMouseLeave(event);
   };
 
   render () {
@@ -45,7 +53,7 @@ class IconButton extends React.Component {
       className: classes,
       disabled: this.props.disabled,
       onMouseUp: this.handleMouseUp,
-      onMouseLeave: this.handleMouseUp,
+      onMouseLeave: this.handleMouseLeave,
       'data-react-toolbox': 'button'
     };
 
@@ -57,3 +65,4 @@ class IconButton extends React.Component {
 }
 
 export default Ripple({centered: true})(IconButton);
+export { IconButton as RawIconButton };

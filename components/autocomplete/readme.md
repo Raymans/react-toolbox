@@ -15,21 +15,22 @@ const source = {
 
 class AutocompleteTest extends React.Component {
   state = { 
-    countries: ['EN-es', 'TH-th']
+    countries: ['ES-es', 'TH-th']
   }
 
   handleChange = (value) => {
-    this.setState({value: value});
+    this.setState({countries: value});
   };
 
   render () {
     return (
       <Autocomplete
         direction="down"
+        selectedPosition="above"
         label="Choose countries"
         onChange={this.handleChange}
         source={source}
-        value={this.state.value}
+        value={this.state.countries}
       />
     );
   }
@@ -42,6 +43,7 @@ class AutocompleteTest extends React.Component {
 |:-----|:-----|:-----|:-----|
 | `className`     | `String`      | `''`            | Sets a class to style of the Component.|
 | `direction`    | `String`       |  `auto`        | Determines the opening direction. It can be `auto`, `top` or `bottom`. |
+| `selectedPosition`    | `String`       |  `above`        | Determines if the selected list is shown above or below input. It can be `above` or `below`. |
 | `disabled`      | `Bool`        |  `false`         | If true, component will be disabled.|
 | `error`         | `String`      |         | Sets the error string for the internal input element.|
 | `label`         | `String`      |         | The text string to use for the floating label element.|

@@ -41,6 +41,20 @@ class PickersTest extends React.Component {
           value={this.state.date2}
         />
 
+        <DatePicker
+          label='Formatted Date'
+          inputFormat={(value) => `${value.getDate()}/${value.getMonth()}/${value.getFullYear()}`}
+          onChange={this.handleChange.bind(this, 'date3')}
+          value={this.state.date3}
+        />
+
+        <DatePicker
+          label='Auto Picker'
+          autoOk
+          onChange={this.handleChange.bind(this, 'date4')}
+          value={this.state.date4}
+        />
+
         <TimePicker
           label='Start time'
           onChange={this.handleChange.bind(this, 'time1')}

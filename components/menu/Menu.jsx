@@ -43,9 +43,11 @@ class Menu extends React.Component {
   };
 
   componentDidMount () {
-    const { width, height } = this.refs.menu.getBoundingClientRect();
-    const position = this.props.position === POSITION.AUTO ? this.calculatePosition() : this.props.position;
-    this.setState({ position, width, height });
+    setTimeout(() => {
+      const { width, height } = this.refs.menu.getBoundingClientRect();
+      const position = this.props.position === POSITION.AUTO ? this.calculatePosition() : this.props.position;
+      this.setState({ position, width, height });
+    });
   }
 
   componentWillReceiveProps (nextProps) {
@@ -68,8 +70,8 @@ class Menu extends React.Component {
     return true;
   }
 
-  componentWillUpdate (prevState, nextState) {
-    if (!prevState.active && nextState.active) {
+  componentWillUpdate (nextProps, nextState) {
+    if (!this.state.active && nextState.active) {
       events.addEventsToDocument({click: this.handleDocumentClick});
     }
   }
@@ -80,6 +82,12 @@ class Menu extends React.Component {
       events.removeEventsFromDocument({click: this.handleDocumentClick});
     } else if (!prevState.active && this.state.active && this.props.onShow) {
       this.props.onShow();
+    }
+  }
+
+  componentWillUnmount () {
+    if (this.state.active) {
+      events.removeEventsFromDocument({click: this.handleDocumentClick});
     }
   }
 
@@ -130,10 +138,11 @@ class Menu extends React.Component {
 
   renderItems () {
     return React.Children.map(this.props.children, (item) => {
+      if (!item) return item;
       if (item.type === MenuItem) {
         return React.cloneElement(item, {
           ripple: item.props.ripple || this.props.ripple,
-          selected: item.props.value && this.props.selectable && item.props.value === this.props.selected,
+          selected: typeof item.props.value !== 'undefined' && this.props.selectable && item.props.value === this.props.selected,
           onClick: this.handleSelect.bind(this, item)
         });
       } else {
@@ -143,7 +152,8 @@ class Menu extends React.Component {
   }
 
   show () {
-    this.setState({active: true});
+    const { width, height } = this.refs.menu.getBoundingClientRect();
+    this.setState({active: true, width, height});
   }
 
   hide () {
@@ -158,7 +168,7 @@ class Menu extends React.Component {
     }, this.props.className);
 
     return (
-      <div className={className} style={this.getRootStyle()}>
+      <div data-react-toolbox='menu' className={className} style={this.getRootStyle()}>
         {this.props.outline ? <div className={style.outline} style={outlineStyle}></div> : null}
         <ul ref='menu' className={style.menu} style={this.getMenuStyle()}>
           {this.renderItems()}
